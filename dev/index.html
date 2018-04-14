@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calendar</title>
+    <link rel="stylesheet" href="./css/build.css">
+    <link rel="stylesheet" href="./css/stylefonts.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="header">
+    <div class="header-container">
+        <div class="header-buttons">
+            <input type="button" class="header__button" value="Добавить">
+            <input type="button" class="header__button" value="Обновить">
+        </div>
+        <form action="" class="header-form">
+            <i class="material-icons">search</i>
+            <input type="search" class="header__search"
+                   placeholder="Событие, дата или участник">
+        </form>
+    </div>
+</div>
+    <div class="calendar">
+    <div class="calendar-container">
+        <nav class="options">
+            <button class="options__button" id="left">
+                <i class="material-icons">keyboard_arrow_left</i>
+            </button>
+            <div class="options__date">
+            </div>
+            <button class="options__button" id="right">
+                <i class="material-icons">keyboard_arrow_right</i>
+            </button>
+            <form action="" class="options-form">
+                <select class="options__select" name="select" id="">
+                    <option>Сегодня</option>
+                </select>
+            </form>
+        </nav>
+        <ul class="list"></ul>
+    </div>
+</div>
+    <script src='./js/build.js'></script>
+</body>
+</html>
