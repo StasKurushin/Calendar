@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Calendar</title>
     <link rel="stylesheet" href="./css/build.css">
-    <link rel="stylesheet" href="./css/stylefonts.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,8 +12,8 @@
     <div class="header">
     <div class="header-container">
         <div class="header-buttons">
-            <input type="button" class="header__button" value="Добавить">
-            <input type="button" class="header__button" value="Обновить">
+            <input type="button" class="button button--add"  value="Добавить">
+            <input type="button" class="button" value="Обновить">
         </div>
         <form action="" class="header-form">
             <i class="material-icons">search</i>
@@ -36,13 +35,36 @@
             </button>
             <form action="" class="options-form">
                 <select class="options__select" name="select" id="">
-                    <option>Сегодня</option>
+                    <option class="select__item">
+                        Дата
+                    </option>
+                    <option class="select__item">
+                        Сегодня
+                    </option>
                 </select>
             </form>
+            <div class="alarm-arrow">
+                <i class="material-icons">keyboard_backspace</i>
+            </div>
         </nav>
         <ul class="list"></ul>
     </div>
 </div>
+    <form class="add-form">
+    <select name="" id="" class="add-form__select">
+        <option value="" class="add-form__option">Тип события</option>
+        <option value="" class="add-form__option">Работа</option>
+        <option value="" class="add-form__option">Семья</option>
+        <option value="" class="add-form__option">Хобби</option>
+    </select>
+    <input class="add-form__input" type="text"
+           placeholder="Введите текс"
+           name="create">
+    <div class="add-form__buttons">
+        <input type="submit" class="button button--create"  value="Создать">
+        <input type="button" class="button button--close" value="Отмена">
+    </div>
+</form>
     <script src='./js/build.js'></script>
 </body>
 </html>
