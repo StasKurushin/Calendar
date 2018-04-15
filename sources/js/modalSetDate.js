@@ -8,10 +8,8 @@ const modalSelectDate = (function() {
     let currentMonth;
     let currentYear;
 
-    let target;
-    let list;
-    let calendar;
-    let select;
+    const target = document.querySelector('.options__date');
+    const select = document.querySelector('.options__select');
 
     function open() {
         currentMonth = currentDate.month;
@@ -30,10 +28,6 @@ const modalSelectDate = (function() {
     function addHandlers() {
         document.querySelector('#right').addEventListener('click', _nextMonth);
         document.querySelector('#left').addEventListener('click', _prevMonth);
-        target = document.querySelector('.options__date');
-        list = document.querySelector('.list');
-        calendar = document.querySelector('.calendar-container');
-        select = document.querySelector('.options__select');
         select.addEventListener('change', watchSelect)
     }
 

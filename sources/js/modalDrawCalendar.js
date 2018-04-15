@@ -21,18 +21,18 @@ const modalDrawCalendar = (function() {
     function prevMonday(currentMonth, currentYear) {
         const date = new Date(currentYear, currentMonth, 1);
         const newDate = new Date(date);
-        const nextDate = new Date(currentYear, currentMonth +1, 0);
+        const nextDate = new Date(currentYear, currentMonth + 1, 0);
         const dayAmount = nextDate.getDate();
         const day = date.getDay();
         const diff = 86400000;
-        nextDate.setTime(date.getTime() + (dayAmount -1) * 86400000);
+        nextDate.setTime(date.getTime() + (dayAmount -1) * diff);
         if (day === 0) {
             newDate.setTime(date.getTime() - 6 * diff);
         } else {
             newDate.setTime(date.getTime() - (day - 1) * diff)
         }
         getTemplate(newDate, diff, date, nextDate);
-        modalCalendarEvent.addContent(currentMonth, currentYear);
+        modalCalendarEvent.addContent(currentMonth, currentYear, newDate, diff, dayAmount);
     }
 
     function getTemplate(newDate, diff, date, nextDate) {
@@ -51,7 +51,6 @@ const modalDrawCalendar = (function() {
                 list.children[idx].children[0].innerHTML = currentWeekDay + ', ' + currentDay;
                 newDate.setTime(newDate.getTime() + diff);
             } else {
-                //if (newDate.getTime() > )
                 currentDay = newDate.toLocaleString('ru', {day: 'numeric'});
                 list.children[idx].children[0].innerHTML = currentDay;
                 newDate.setTime(newDate.getTime() + diff);
@@ -62,9 +61,9 @@ const modalDrawCalendar = (function() {
     function addCalendar() {
         for (let i = 0; i < 42; i++) {
             list.insertAdjacentHTML('afterBegin', '<li class="list__item">' +
-                                                        '<div class="list__item-date"></div>' +
-                                                        '<div class="list__item-type"></div>' +
-                                                        '<div class="list__item-event"</span>' +
+                                                        '<span class="list__item-date"></span>' +
+                                                        '<span class="list__item-type"></span>' +
+                                                        '<span class="list__item-event"</span>' +
                                                 '</li>')
         }
     }

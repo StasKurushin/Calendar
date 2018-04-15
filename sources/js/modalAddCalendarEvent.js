@@ -23,11 +23,12 @@ const modalCalendarEvent = (function () {
             this.text = text;
             this.startDay = startDay;
             this.list = list;
+            this.index = this.day - 1 + this.startDay
         }
 
         pushEvent() {
-            this.list.children[this.day - 1 + this.startDay].children[1].innerHTML = this.type;
-            this.list.children[this.day - 1 + this.startDay].children[2].innerHTML = this.text;
+            this.list.children[this.index].children[1].innerHTML = this.type;
+            this.list.children[this.index].children[2].innerHTML = this.text;
         }
 
     }
@@ -39,14 +40,52 @@ const modalCalendarEvent = (function () {
     function init(month, year) {
         currentMonth = month;
         currentYear = year;
+        createDate(month, year);
+    }
+
+    function createDate(currentMonth, currentYear) {
+        const date = new Date(currentYear, currentMonth, 1);
+        const newDate = new Date(date);
+        const day = date.getDay();
+        const diff = 86400000;
+        if (day === 0) {
+            newDate.setTime(date.getTime() - 6 * diff);
+        } else {
+            newDate.setTime(date.getTime() - (day - 1) * diff)
+        }
+        holdEvents(currentMonth, currentYear, newDate, diff)
+    }
+
+    function holdEvents(month, year, newDate, diff) {
+        if (m.length !== 0) {
+            const listItem = document.querySelectorAll('.list__item');
+            [].forEach.call(listItem, (item, idx) => {
+                item.children[1].innerHTML = ' ';
+                item.children[2].innerHTML = ' ';
+                m.forEach(el => {
+                    if (el.year === year) {
+                        if (el.month === month && el.day === newDate.getDate()) {
+                            if (idx === el.index) {
+                                item.children[1].innerHTML = el.type;
+                                item.children[2].innerHTML = el.text;
+                                console.log('bingo')
+                            }
+                        }
+                    }
+                });
+                newDate.setTime(newDate.getTime() + diff)
+            })
+        }
     }
 
     function getSelectedText(value) {
-        selectedDate = value;
         const newDate = new Date(currentYear, currentMonth, 1);
-        if (selectedDate === 'Сегодня') {
+        if (value === 'Сегодня') {
             const newDate = new Date();
+            selectedDate = value;
             selectedDate = newDate.getDate();
+        } else {
+            selectedDate = +value;
         }
         startDay = newDate.getDay();
         if (startDay === 0) {startDay = 6}
