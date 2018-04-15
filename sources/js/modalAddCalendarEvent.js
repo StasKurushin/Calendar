@@ -1,15 +1,36 @@
 const modalCalendarEvent = (function () {
 
-    let addForm;
-    let closeBtn;
+    const addBtn = document.querySelector('.button--add');
+    const addForm = document.querySelector('.add-form');
+    const closeBtn = document.querySelector('.button--close');
+    const list = document.querySelector('.list');
+
     let currentMonth;
     let currentYear;
     let selectedDate;
-    let addBtn;
-    let createBtn;
+
     let startDay;
-    let list;
-    let listItem;
+
+    let m = [];
+
+    class Event {
+
+        constructor(year, month, day, type, text, startDay, list) {
+            this.year = year;
+            this.month = month;
+            this.day = day;
+            this.type = type;
+            this.text = text;
+            this.startDay = startDay;
+            this.list = list;
+        }
+
+        pushEvent() {
+            this.list.children[this.day - 1 + this.startDay].children[1].innerHTML = this.type;
+            this.list.children[this.day - 1 + this.startDay].children[2].innerHTML = this.text;
+        }
+
+    }
 
     function open() {
         addHandlers()
@@ -46,32 +67,26 @@ const modalCalendarEvent = (function () {
     }
 
     function addHandlers() {
-        listItem = document.querySelectorAll('.list__item');
-        list = document.querySelector('.list');
-        addBtn = document.querySelector('.button--add');
-        addForm = document.querySelector('.add-form');
-        closeBtn = document.querySelector('.button--close');
-        createBtn = document.querySelector('.button--create');
         addBtn.addEventListener('click', showForm);
         closeBtn.addEventListener('click', hideForm);
         addForm.addEventListener('submit', event => {
             event.preventDefault();
             const inputValue = addForm.elements[1].value;
             addForm.elements[1].value = ' ';
-            const selectedEvent = addForm.elements[0].options[addForm.elements[0].selectedIndex].text;
-            if (selectedEvent === 'Тип события'){
+            const typeEvent = addForm.elements[0].options[addForm.elements[0].selectedIndex].text;
+            if (typeEvent === 'Тип события'){
                 alert('Выберите тип события')
             } else {
-                pushEventToCalendar(inputValue, selectedEvent);
+                pushEventToCalendar(inputValue, typeEvent);
+                hideForm();
             }
         })
     }
 
-    function pushEventToCalendar(inputValue, selectedEvent) {
-        list.children[selectedDate - 1 + startDay].children[1].innerHTML = selectedEvent;
-        list.children[selectedDate - 1 + startDay].children[2].innerHTML = inputValue;
-
-
+    function pushEventToCalendar(inputValue, typeEvent) {
+        const event = new Event(currentYear, currentMonth, selectedDate, typeEvent, inputValue, startDay, list);
+        event.pushEvent();
+        m.push(event);
     }
 
     return {

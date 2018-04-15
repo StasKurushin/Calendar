@@ -25,7 +25,6 @@ const modalSelectDate = (function() {
         target.innerHTML = monthArr[currentMonth] + " " + currentYear;
         fillSelect();
         modalDrawCalendar.openModal(currentMonth, currentYear);
-
     }
 
     function addHandlers() {
@@ -36,8 +35,6 @@ const modalSelectDate = (function() {
         calendar = document.querySelector('.calendar-container');
         select = document.querySelector('.options__select');
         select.addEventListener('change', watchSelect)
-
-
     }
 
     function init (value) {
@@ -74,8 +71,8 @@ const modalSelectDate = (function() {
     }
 
     function watchSelect() {
-        const selectedData = select.options[select.selectedIndex].text;
-        modalCalendarEvent.addSelect(selectedData)
+        const selectedDate = select.options[select.selectedIndex].text;
+        modalCalendarEvent.addSelect(selectedDate)
     }
 
     function clearSelect() {

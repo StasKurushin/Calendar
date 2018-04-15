@@ -1,15 +1,36 @@
 const modalCalendarEvent = (function () {
 
-    let addForm;
-    let closeBtn;
+    const addBtn = document.querySelector('.button--add');
+    const addForm = document.querySelector('.add-form');
+    const closeBtn = document.querySelector('.button--close');
+    const list = document.querySelector('.list');
+
     let currentMonth;
     let currentYear;
     let selectedDate;
-    let addBtn;
-    let createBtn;
+
     let startDay;
-    let list;
-    let listItem;
+
+    let m = [];
+
+    class Event {
+
+        constructor(year, month, day, type, text, startDay, list) {
+            this.year = year;
+            this.month = month;
+            this.day = day;
+            this.type = type;
+            this.text = text;
+            this.startDay = startDay;
+            this.list = list;
+        }
+
+        pushEvent() {
+            this.list.children[this.day - 1 + this.startDay].children[1].innerHTML = this.type;
+            this.list.children[this.day - 1 + this.startDay].children[2].innerHTML = this.text;
+        }
+
+    }
 
     function open() {
         addHandlers()
@@ -46,32 +67,26 @@ const modalCalendarEvent = (function () {
     }
 
     function addHandlers() {
-        listItem = document.querySelectorAll('.list__item');
-        list = document.querySelector('.list');
-        addBtn = document.querySelector('.button--add');
-        addForm = document.querySelector('.add-form');
-        closeBtn = document.querySelector('.button--close');
-        createBtn = document.querySelector('.button--create');
         addBtn.addEventListener('click', showForm);
         closeBtn.addEventListener('click', hideForm);
         addForm.addEventListener('submit', event => {
             event.preventDefault();
             const inputValue = addForm.elements[1].value;
             addForm.elements[1].value = ' ';
-            const selectedEvent = addForm.elements[0].options[addForm.elements[0].selectedIndex].text;
-            if (selectedEvent === 'Тип события'){
+            const typeEvent = addForm.elements[0].options[addForm.elements[0].selectedIndex].text;
+            if (typeEvent === 'Тип события'){
                 alert('Выберите тип события')
             } else {
-                pushEventToCalendar(inputValue, selectedEvent);
+                pushEventToCalendar(inputValue, typeEvent);
+                hideForm();
             }
         })
     }
 
-    function pushEventToCalendar(inputValue, selectedEvent) {
-        list.children[selectedDate - 1 + startDay].children[1].innerHTML = selectedEvent;
-        list.children[selectedDate - 1 + startDay].children[2].innerHTML = inputValue;
-
-
+    function pushEventToCalendar(inputValue, typeEvent) {
+        const event = new Event(currentYear, currentMonth, selectedDate, typeEvent, inputValue, startDay, list);
+        event.pushEvent();
+        m.push(event);
     }
 
     return {
@@ -86,7 +101,6 @@ const modalCalendarEvent = (function () {
 const modalDrawCalendar = (function() {
     let list;
     let currentDay;
-    let currentMonth;
     let currentWeekDay;
 
 
@@ -106,25 +120,37 @@ const modalDrawCalendar = (function() {
     function prevMonday(currentMonth, currentYear) {
         const date = new Date(currentYear, currentMonth, 1);
         const newDate = new Date(date);
+        const nextDate = new Date(currentYear, currentMonth +1, 0);
+        const dayAmount = nextDate.getDate();
         const day = date.getDay();
         const diff = 86400000;
+        nextDate.setTime(date.getTime() + (dayAmount -1) * 86400000);
         if (day === 0) {
             newDate.setTime(date.getTime() - 6 * diff);
         } else {
             newDate.setTime(date.getTime() - (day - 1) * diff)
         }
-        getTemplate(newDate, diff);
+        getTemplate(newDate, diff, date, nextDate);
         modalCalendarEvent.addContent(currentMonth, currentYear);
     }
 
-    function getTemplate(newDate, diff) {
+    function getTemplate(newDate, diff, date, nextDate) {
         [].forEach.call(list.children, (el, idx) => {
+            if (newDate.getTime() < date.getTime()) {
+                list.children[idx].style.background = 'rgb(236, 236, 236)';
+            } else {
+                list.children[idx].style.background = 'white';
+            }
+            if (newDate.getTime() > nextDate.getTime()) {
+                list.children[idx].style.background = 'rgb(236, 236, 236)';
+            }
             if (idx < 7) {
                 currentWeekDay = newDate.toLocaleString('ru', {weekday: 'long'});
                 currentDay = newDate.toLocaleString('ru', {day: 'numeric'});
                 list.children[idx].children[0].innerHTML = currentWeekDay + ', ' + currentDay;
                 newDate.setTime(newDate.getTime() + diff);
             } else {
+                //if (newDate.getTime() > )
                 currentDay = newDate.toLocaleString('ru', {day: 'numeric'});
                 list.children[idx].children[0].innerHTML = currentDay;
                 newDate.setTime(newDate.getTime() + diff);
@@ -135,16 +161,15 @@ const modalDrawCalendar = (function() {
     function addCalendar() {
         for (let i = 0; i < 42; i++) {
             list.insertAdjacentHTML('afterBegin', '<li class="list__item">' +
-                                                        '<span class="list__item-date"></span>' +
-                                                        '<span class="list__item-type"></span>' +
-                                                        '<span class="list__item-event"</span>' +
+                                                        '<div class="list__item-date"></div>' +
+                                                        '<div class="list__item-type"></div>' +
+                                                        '<div class="list__item-event"</span>' +
                                                 '</li>')
         }
     }
 
     return {openModal: open,
-            addContent: init
-            }
+            addContent: init}
 
 })();
 const modalSelectDate = (function() {
@@ -174,7 +199,6 @@ const modalSelectDate = (function() {
         target.innerHTML = monthArr[currentMonth] + " " + currentYear;
         fillSelect();
         modalDrawCalendar.openModal(currentMonth, currentYear);
-
     }
 
     function addHandlers() {
@@ -185,8 +209,6 @@ const modalSelectDate = (function() {
         calendar = document.querySelector('.calendar-container');
         select = document.querySelector('.options__select');
         select.addEventListener('change', watchSelect)
-
-
     }
 
     function init (value) {
@@ -223,8 +245,8 @@ const modalSelectDate = (function() {
     }
 
     function watchSelect() {
-        const selectedData = select.options[select.selectedIndex].text;
-        modalCalendarEvent.addSelect(selectedData)
+        const selectedDate = select.options[select.selectedIndex].text;
+        modalCalendarEvent.addSelect(selectedDate)
     }
 
     function clearSelect() {
